@@ -1,5 +1,6 @@
 import os
 import sys
+import yaml
 from dataclasses import dataclass
 
 from sklearn.ensemble import AdaBoostRegressor, RandomForestRegressor, GradientBoostingRegressor
@@ -44,7 +45,9 @@ class ModelTrainer:
                 "XGBoost": XGBRegressor(),
                 "AdaBoost": AdaBoostRegressor()
             }
-            model_report: dict = eval_models(x_train, x_test, y_train, y_test, models)
+            with open("finetuneparam.yaml","r") as f:
+                params = yaml.safe_load(f)
+            model_report: dict = eval_models(x_train, x_test, y_train, y_test, models, params)
             temp = list(model_report.items())[-1]
             best_model_score = temp[1]
             best_model_name = temp[0]
