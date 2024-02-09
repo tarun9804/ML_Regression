@@ -6,4 +6,5 @@ matplotlib
 xgboost
 dill
 pyyaml
+flask
 #-e .

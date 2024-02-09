@@ -47,17 +47,21 @@ class ModelTrainer:
             }
             with open("finetuneparam.yaml","r") as f:
                 params = yaml.safe_load(f)
-            model_report: dict = eval_models(x_train, x_test, y_train, y_test, models, params)
+            file_path = self.model_trainer_config.trained_model_path
+            model_report: dict = eval_models(x_train, x_test, y_train, y_test, models, params, file_path)
             temp = list(model_report.items())[-1]
             best_model_score = temp[1]
             best_model_name = temp[0]
             logging.info(f"best model {best_model_name} found")
-
+            '''
             save_obj(
                 file_path=self.model_trainer_config.trained_model_path,
-                obj=best_model_name
+                obj=models[best_model_name]
             )
-            return best_model_name,best_model_score
+            
+            '''
+
+            return best_model_name, best_model_score
 
         except Exception as e:
             pass

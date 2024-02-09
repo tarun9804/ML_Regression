@@ -1,6 +1,7 @@
 import os
 import sys
 import dill
+import joblib
 import numpy as np
 import pandas as pd
 from src.exception import CustomException
@@ -18,7 +19,7 @@ def save_obj(file_path, obj):
         raise CustomException(e, sys)
 
 
-def eval_models(x_train, x_test, y_train, y_test, models, param):
+def eval_models(x_train, x_test, y_train, y_test, models, param, file_path):
     report = {}
     r = {}
     for i in models:
@@ -39,6 +40,26 @@ def eval_models(x_train, x_test, y_train, y_test, models, param):
         report[i] = test_score
     x = list(report.keys())
     y = list(report.values())
-    z = np.argsort(y,)
+    z = np.argsort(y)
     r = {x[i]: y[i] for i in z}
+    best_model_name = x[z[-1]]
+    model = models[best_model_name]
+    para = param[best_model_name]
+    print(f"running best model {best_model_name}...")
+    gs = GridSearchCV(model, para, cv=3)
+    gs.fit(x_train, y_train)
+    model.set_params(**gs.best_params_)
+    model.fit(x_train, y_train)
+    save_obj(file_path,model)
     return r
+
+
+def load_object(file_path):
+    try:
+        print(file_path)
+        with open(file_path, "rb") as f:
+            return dill.load(f)
+    except Exception as e:
+        raise CustomException(e,sys)
+
+
