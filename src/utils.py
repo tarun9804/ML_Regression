@@ -42,6 +42,7 @@ def eval_models(x_train, x_test, y_train, y_test, models, param, file_path):
     y = list(report.values())
     z = np.argsort(y)
     r = {x[i]: y[i] for i in z}
+    '''
     best_model_name = x[z[-1]]
     model = models[best_model_name]
     para = param[best_model_name]
@@ -51,6 +52,8 @@ def eval_models(x_train, x_test, y_train, y_test, models, param, file_path):
     model.set_params(**gs.best_params_)
     model.fit(x_train, y_train)
     save_obj(file_path,model)
+    '''
+
     return r
 
 
